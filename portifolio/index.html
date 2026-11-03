@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Célio Augusto — Portfólio & Game Developer</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            red: '#e62b40',
+                            'red-bright': '#ff334b',
+                            dark: '#0a0a0c',
+                            'dark-card': '#121216',
+                            light: '#f4f3ef',
+                            'light-card': '#e7e5df',
+                            mono: '#888890'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Three.js Library para elemento 3D Hero -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <style>
+        /* Estética Webdrift & Efeitos Retro Vintage */
+        body {
+            background-color: #0a0a0c;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+
+        /* Subtensão de grade tecnológica */
+        .bg-tech-grid {
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(230, 43, 64, 0.06) 0%, transparent 60%),
+                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
+        }
+
+        .bg-editorial-grid {
+            background-image: 
+                linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+            background-size: 50px 50px, 50px 50px;
+        }
+
+        /* Efeito CRT Retro 1984 */
+        .mode-1984 {
+            filter: sepia(0.25) hue-rotate(85deg) saturate(2.5) contrast(1.15) !important;
+        }
+
+        .crt-scanlines {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 3px, 6px 100%;
+            display: none;
+            opacity: 0.85;
+        }
+
+        .mode-1984-active .crt-scanlines {
+            display: block;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0c;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #e62b40;
+            border-radius: 3px;
+        }
+
+        /* Fonte Cursiva Vintage Macintosh */
+        @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600&display=swap');
+        .font-cursive {
+            font-family: 'Caveat', cursive;
+        }
+    </style>
+</head>
+<body class="selection:bg-brand-red selection:text-white">
+
+    <!-- Efeito de Scanlines CRT para Modo 1984 -->
+    <div class="crt-scanlines"></div>
+
+    <!-- Coordenadas Dinâmicas no Canto da Tela -->
+    <div class="fixed bottom-4 left-4 z-40 hidden md:flex items-center gap-3 font-mono text-[11px] text-zinc-500 bg-black/70 backdrop-blur border border-zinc-800 px-3 py-1.5 rounded-full pointer-events-none">
+        <span class="inline-block w-2 h-2 rounded-full bg-brand-red animate-pulse"></span>
+        <span id="coords-display">x 0.50 · y 0.50</span>
+        <span class="text-zinc-700">|</span>
+        <span class="text-zinc-400">CÉLIO.DEV</span>
+    </div>
+
+    <!-- NAVBAR HEADER FIXO -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-[#0a0a0c]/90 backdrop-blur-md border-b border-zinc-800/60 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            
+            <!-- Logo com Nome -->
+            <div class="flex items-center gap-4 sm:gap-6">
+                <a href="#hero" class="flex items-center gap-2 group">
+                    <span class="font-display font-bold text-lg sm:text-xl tracking-tight text-white group-hover:text-brand-red transition-colors">
+                        célio<span class="text-brand-red">.augusto</span>
+                    </span>
+                    <span class="text-[10px] font-mono px-1.5 py-0.5 rounded border border-brand-red/40 text-brand-red bg-brand-red/10">TI 2º ANO</span>
+                </a>
+
+                <div class="hidden sm:flex items-center gap-2 text-xs font-mono text-zinc-400 border-l border-zinc-800 pl-4">
+                    <span class="w-1.5 h-1.5 rounded-full bg-brand-red"></span>
+                    <span>00 Intro</span>
+                    <span class="h-0.5 w-8 bg-zinc-800"></span>
+                </div>
+            </div>
+
+            <!-- Relógio em Tempo Real com Fuso Horário de SP -->
+            <div class="hidden lg:flex items-center gap-2 text-xs font-mono text-zinc-400 bg-zinc-900/90 px-3 py-1 rounded-full border border-zinc-800">
+                <svg class="w-3.5 h-3.5 text-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span>Brasil (SP)</span>
+                <span id="live-clock" class="text-white font-semibold">--:--:--</span>
+                <span class="text-zinc-500 text-[10px]">UTC-3</span>
+            </div>
+
+            <!-- Controles à Direita -->
+            <div class="flex items-center gap-3 sm:gap-4">
+                <!-- Botão Efeito Retro 1984 -->
+                <button id="btn-1984" class="flex items-center gap-2 text-xs font-mono px-3 py-1.5 rounded-full border border-zinc-700 bg-zinc-900/90 text-zinc-300 hover:text-white hover:border-brand-red transition-all group" title="Modo Visual 1984">
+                    <svg class="w-3.5 h-3.5 text-zinc-400 group-hover:text-brand-red transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    <span class="hidden sm:inline">Back to 1984</span>
+                    <span id="badge-1984" class="text-[9px] bg-zinc-800 px-1.5 py-0.2 rounded text-zinc-400 group-hover:bg-brand-red group-hover:text-white">OFF</span>
+                </button>
+
+                <!-- Botão Contato CTA -->
+                <button onclick="openProjectModal()" class="flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-md bg-brand-red hover:bg-brand-red-bright text-white transition-all transform hover:-translate-y-0.5 shadow-lg shadow-brand-red/25">
+                    <span>Falar Comigo</span>
+                </button>
+
+                <!-- Botão Menu Mobile -->
+                <button id="btn-mobile-menu" class="lg:hidden p-2 rounded-md text-zinc-400 hover:text-white hover:bg-zinc-800">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Menu Mobile Dropdown -->
+        <div id="mobile-menu" class="hidden lg:hidden border-b border-zinc-800 bg-[#0a0a0c] px-6 py-4 space-y-3 font-mono text-sm">
+            <a href="#hero" class="block text-zinc-300 hover:text-brand-red">00 Início</a>
+            <a href="#studio" class="block text-zinc-300 hover:text-brand-red">01 Sobre Mim</a>
+            <a href="#game-section" class="block text-zinc-300 hover:text-brand-red">02 Meu Jogo 2D</a>
+            <a href="#projects" class="block text-zinc-300 hover:text-brand-red">03 Projetos</a>
+            <a href="#skills" class="block text-zinc-300 hover:text-brand-red">04 Habilidades</a>
+            <button onclick="openProjectModal()" class="w-full text-center mt-2 py-2 bg-brand-red text-white font-semibold rounded">Falar Comigo</button>
+        </div>
+    </header>
+
+    <!-- SEÇÃO 1: HERO (Dark Mode Webdrift com 3D Keypad/Console) -->
+    <section id="hero" class="relative min-h-screen pt-28 pb-16 flex items-center bg-tech-grid overflow-hidden border-b border-zinc-800">
+        
+        <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-brand-red/10 rounded-full blur-[140px] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            <!-- Conteúdo da Esquerda -->
+            <div class="lg:col-span-7 space-y-6">
+                <!-- Badge de Apresentação -->
+                <div class="inline-flex items-center gap-3 text-xs font-mono text-zinc-400 bg-zinc-900/90 border border-zinc-800 px-3.5 py-1.5 rounded-full">
+                    <span class="w-2 h-2 rounded-full bg-brand-red animate-ping"></span>
+                    <span class="text-zinc-200">16 Anos · Estudante de TI & Game Dev</span>
+                </div>
+
+                <!-- Título Principal Webdrift -->
+                <h1 class="text-4xl sm:text-6xl md:text-7xl font-bold font-display tracking-tight text-white leading-[1.05]">
+                    Pixels ganham vida.<br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-zinc-200 to-zinc-500">Código permanece.</span>
+                </h1>
+
+                <!-- Bio Curta -->
+                <p class="text-base sm:text-lg text-zinc-400 max-w-xl font-normal leading-relaxed">
+                    Olá! Sou o <strong class="text-white font-semibold">Célio Augusto da Silva Pereira</strong>. Cursando o 2º ano do Ensino Técnico em TI, focado em desenvolvimento web, estruturas de código e criação de jogos digitais.
+                </p>
+
+                <!-- Botões de Ação -->
+                <div class="pt-4 flex flex-wrap items-center gap-4">
+                    <a href="#game-section" class="inline-flex items-center gap-3 px-6 py-3.5 rounded-md bg-brand-red hover:bg-brand-red-bright text-white font-semibold text-sm transition-all transform hover:-translate-y-0.5 shadow-xl shadow-brand-red/20">
+                        <span>Jogar Meu Game</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </a>
+
+                    <a href="#projects" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-md border border-zinc-700 bg-zinc-900/60 hover:bg-zinc-800 text-zinc-200 font-semibold text-sm transition-all">
+                        <span>Ver Portfólio</span>
+                    </a>
+                </div>
+
+                <!-- Estatísticas Rápidas -->
+                <div class="pt-8 border-t border-zinc-800/80 grid grid-cols-3 gap-4 max-w-md font-mono text-xs text-zinc-400">
+                    <div>
+                        <div class="text-xl font-bold font-display text-white">16 Anos</div>
+                        <div class="text-zinc-500 text-[11px] mt-0.5">Idade</div>
+                    </div>
+                    <div>
+                        <div class="text-xl font-bold font-display text-white">2º Ano</div>
+                        <div class="text-zinc-500 text-[11px] mt-0.5">Técnico em TI</div>
+                    </div>
+                    <div>
+                        <div class="text-xl font-bold font-display text-white">Game Dev</div>
+                        <div class="text-zinc-500 text-[11px] mt-0.5">Desenvolvedor Indie</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tela 3D Interativa na Direita (Three.js Keypad Webdrift) -->
+            <div class="lg:col-span-5 relative flex flex-col items-center justify-center">
+                <div class="absolute top-2 right-2 text-right font-mono text-[10px] text-zinc-500 select-none">
+                    <span class="text-brand-red">■</span> Fig. 01 · Console & MacroKeypad<br>
+                    <span>Célio Augusto Workstation</span>
+                </div>
+
+                <div id="hero-3d-container" class="w-full h-[350px] sm:h-[400px] rounded-2xl bg-zinc-950/60 border border-zinc-800/80 relative overflow-hidden flex items-center justify-center cursor-grab active:cursor-grabbing shadow-2xl">
+                    <div id="canvas-loading" class="absolute font-mono text-xs text-zinc-500 flex items-center gap-2">
+                        <span class="w-3 h-3 border-2 border-brand-red border-t-transparent rounded-full animate-spin"></span>
+                        Carregando interatividade 3D...
+                    </div>
+                </div>
+
+                <div class="mt-3 font-mono text-[11px] text-zinc-500 flex items-center gap-2">
+                    <svg class="w-3.5 h-3.5 text-brand-red animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"></path></svg>
+                    <span>Passe o mouse ou arraste para girar o dispositivo 3D</span>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SEÇÃO 2: SOBRE MIM / STUDIO (Fundo Claro Editorial Webdrift #f4f3ef) -->
+    <section id="studio" class="py-24 bg-brand-light text-zinc-900 bg-editorial-grid relative border-b border-zinc-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="flex items-center gap-3 text-xs font-mono text-zinc-500 mb-8">
+                <span class="w-2 h-2 bg-brand-red inline-block"></span>
+                <span class="uppercase tracking-wider font-semibold text-zinc-700">01 SOBRE MIM</span>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+                <div class="lg:col-span-8 space-y-8">
+                    <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold font-display text-zinc-900 leading-[1.15] tracking-tight">
+                        Focado em aprender, criar e evoluir a cada linha de código.<br>
+                        <span class="text-zinc-600 font-normal">
+                            Com 16 anos e cursando o 2º ano técnico de TI, dedico meu tempo à construção de páginas web modernas, lógica de programação e criação de jogos autorais.
+                        </span>
+                    </h2>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 pt-6 border-t border-zinc-300/80 font-mono text-xs">
+                        <div>
+                            <span class="text-zinc-500 block mb-1">Formação Atual</span>
+                            <strong class="text-sm font-sans font-semibold text-zinc-900">2º Ano do Ensino Técnico em TI</strong>
+                            <p class="text-zinc-600 mt-1">Desenvolvimento de Software, Web & Algoritmos.</p>
+                        </div>
+                        <div>
+                            <span class="text-zinc-500 block mb-1">E-mail de Contato</span>
+                            <strong class="text-sm font-sans font-semibold text-zinc-900 truncate block">celioaugustodasilvapereira037@gmail.com</strong>
+                            <p class="text-zinc-600 mt-1">Disponível para projetos, cursos e parcerias.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ilustração Cassette Retro Studio -->
+                <div class="lg:col-span-4">
+                    <div class="bg-white p-4 rounded-xl border border-zinc-300 shadow-xl relative group">
+                        <div class="relative overflow-hidden rounded-lg bg-zinc-900 aspect-[4/3] flex items-center justify-center">
+                            <svg class="w-48 h-32 transition-transform duration-500 group-hover:scale-105" viewBox="0 0 200 130" fill="none">
+                                <rect width="200" height="130" rx="8" fill="#1c1c22"/>
+                                <rect x="15" y="15" width="170" height="70" rx="4" fill="#e7e5df"/>
+                                <rect x="25" y="22" width="150" height="56" rx="2" fill="#e62b40"/>
+                                <text x="32" y="42" fill="#ffffff" font-family="monospace" font-size="11" font-weight="bold">CÉLIO AUGUSTO · DEV TAPES</text>
+                                <text x="32" y="58" fill="#ffffff" font-family="monospace" font-size="8">2º ANO TÉCNICO TI · GAME DEV</text>
+                                <circle cx="65" cy="50" r="14" fill="#ffffff"/>
+                                <circle cx="65" cy="50" r="7" fill="#1c1c22"/>
+                                <circle cx="135" cy="50" r="14" fill="#ffffff"/>
+                                <circle cx="135" cy="50" r="7" fill="#1c1c22"/>
+                                <line x1="65" y1="50" x2="135" y2="50" stroke="#1c1c22" stroke-width="2"/>
+                                <rect x="30" y="95" width="140" height="20" rx="2" fill="#2a2a32"/>
+                                <circle cx="45" cy="105" r="3" fill="#666"/>
+                                <circle cx="155" cy="105" r="3" fill="#666"/>
+                            </svg>
+                        </div>
+                        <div class="mt-3 flex items-center justify-between font-mono text-[11px] text-zinc-500">
+                            <span>Fig. 02 · Studio Cassette</span>
+                            <span class="text-brand-red font-semibold">Célio Tape Vol. 1</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SEÇÃO 3: PROJETO DE JOGO DESTAQUE (JOGÁVEL NA TELA) -->
+    <section id="game-section" class="py-24 bg-[#0a0a0c] relative border-b border-zinc-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+                <div>
+                    <div class="flex items-center gap-3 text-xs font-mono text-zinc-400 mb-2">
+                        <span class="w-2 h-2 bg-brand-red inline-block"></span>
+                        <span class="uppercase tracking-wider text-brand-red font-bold">02 PROJETO EM DESTAQUE</span>
+                    </div>
+                    <h2 class="text-3xl sm:text-5xl font-bold font-display text-white">Cyber Runner 2D — Meu Jogo</h2>
+                    <p class="text-zinc-400 text-sm sm:text-base mt-2 max-w-2xl">
+                        Jogo 2D interativo desenvolvido em HTML5 Canvas e JavaScript puro. Pule os obstáculos e consiga a maior pontuação!
+                    </p>
+                </div>
+
+                <div class="font-mono text-xs text-zinc-400 bg-zinc-900 border border-zinc-800 px-4 py-2 rounded-lg">
+                    <span>Controles: </span>
+                    <span class="text-white font-bold bg-zinc-800 px-2 py-0.5 rounded border border-zinc-700">ESPAÇO</span> ou <span class="text-white font-bold bg-zinc-800 px-2 py-0.5 rounded border border-zinc-700">CLIQUE / TOQUE</span> para pular
+                </div>
+            </div>
+
+            <!-- Game Canvas Container -->
+            <div class="relative bg-zinc-950 rounded-2xl border-2 border-brand-red/40 overflow-hidden shadow-2xl p-4 flex flex-col items-center">
+                <!-- Top Status Bar -->
+                <div class="w-full flex items-center justify-between font-mono text-xs text-zinc-400 mb-3 px-2">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span class="text-white font-bold">CYBER RUNNER v1.0</span>
+                    </div>
+                    <div>
+                        <span>Score: </span><span id="game-score" class="text-brand-red font-bold text-base">0</span>
+                        <span class="ml-4 text-zinc-600">| Recorde: </span><span id="game-highscore" class="text-white font-bold">0</span>
+                    </div>
+                </div>
+
+                <!-- Canvas principal do jogo -->
+                <canvas id="cyber-game-canvas" class="w-full h-[300px] sm:h-[360px] bg-[#121218] rounded-xl border border-zinc-800 cursor-pointer"></canvas>
+
+                <!-- Overlay de Fim de Jogo / Início -->
+                <div id="game-overlay" class="absolute inset-0 bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center z-20">
+                    <h3 class="text-3xl sm:text-4xl font-bold font-display text-white mb-2">Cyber Runner 2D</h3>
+                    <p class="text-zinc-400 text-sm mb-6 max-w-md">Criado por Célio Augusto usando JavaScript & HTML Canvas. Evite os obstáculos digitais!</p>
+                    <button id="btn-start-game" class="px-8 py-3.5 bg-brand-red hover:bg-brand-red-bright text-white font-bold rounded-lg font-mono text-sm transition-all transform hover:scale-105 shadow-xl shadow-brand-red/30">
+                        ▶ JOGAR AGORA
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SEÇÃO 4: ABORDAGEM & VINTAGE MACINTOSH (Webdrift Style) -->
+    <section id="approach" class="py-24 bg-[#0a0a0c] relative border-b border-zinc-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="flex flex-wrap items-center justify-between gap-4 mb-16">
+                <div class="flex items-center gap-3 text-xs font-mono text-zinc-400">
+                    <span class="w-2 h-2 bg-brand-red inline-block"></span>
+                    <span class="uppercase tracking-wider">Metodologia de Estudo</span>
+                </div>
+
+                <div class="flex items-center gap-4 sm:gap-8 font-mono text-xs">
+                    <span class="text-white border-b border-brand-red pb-0.5">01 Lógica</span>
+                    <span class="text-zinc-500">02 Web Design</span>
+                    <span class="text-zinc-500">03 Game Dev</span>
+                    <span class="text-zinc-500">04 Publicação</span>
+                </div>
+            </div>
+
+            <div class="relative flex flex-col lg:flex-row items-center justify-between gap-12">
+                
+                <div class="space-y-6 max-w-lg">
+                    <h2 class="text-4xl sm:text-5xl font-bold font-display text-white tracking-tight">
+                        Desenvolvimento & Prática
+                    </h2>
+                    <p class="text-zinc-400 text-base leading-relaxed">
+                        Como estudante de TI, divido meu foco entre resolver algoritmos, estruturar aplicações web responsivas e desenvolver jogos com física simples.
+                    </p>
+
+                    <div class="space-y-3 pt-4 font-mono text-sm">
+                        <div class="p-3.5 rounded-lg bg-zinc-900/90 border border-brand-red/40 flex items-center justify-between">
+                            <span class="text-white font-semibold">01. Lógica & Algoritmos</span>
+                            <span class="text-brand-red">→</span>
+                        </div>
+                        <div class="p-3.5 rounded-lg bg-zinc-950 border border-zinc-800/80 text-zinc-400 flex items-center justify-between">
+                            <span>02. HTML5, CSS3 & JavaScript</span>
+                            <span>→</span>
+                        </div>
+                        <div class="p-3.5 rounded-lg bg-zinc-950 border border-zinc-800/80 text-zinc-400 flex items-center justify-between">
+                            <span>03. Motores de Jogos & Canvas 2D</span>
+                            <span>→</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Macintosh Classic 1984 Ilustrativo (Webdrift Fig. 03) -->
+                <div class="relative flex flex-col items-center">
+                    <div class="w-72 sm:w-80 h-96 bg-[#ded8c8] rounded-2xl border-4 border-[#b5ae9c] shadow-2xl p-4 flex flex-col items-center justify-between relative">
+                        <div class="w-full h-56 bg-[#181a1b] rounded-xl border-4 border-[#857e6d] p-4 flex flex-col items-center justify-center relative overflow-hidden shadow-inner">
+                            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-emerald-500/5 to-transparent pointer-events-none"></div>
+                            
+                            <span class="font-cursive text-5xl sm:text-6xl text-white tracking-wide animate-pulse">hello</span>
+                            
+                            <span class="absolute bottom-2 text-[10px] font-mono text-zinc-500">Célio's Workstation</span>
+                        </div>
+
+                        <div class="w-full flex items-center justify-between px-2 pt-2">
+                            <div class="w-24 h-2 bg-[#706a5b] rounded-full"></div>
+                            <div class="w-3 h-3 bg-[#444] rounded-full"></div>
+                        </div>
+
+                        <div class="w-full text-center font-mono text-[10px] text-[#6b6455] font-bold">
+                            Técnico em TI 1984 Ed.
+                        </div>
+                    </div>
+
+                    <div class="mt-6 text-3xl sm:text-4xl font-bold font-display text-brand-red tracking-tight">
+                        Development
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SEÇÃO 5: OUTROS PROJETOS -->
+    <section id="projects" class="py-24 bg-[#0a0a0c] relative border-b border-zinc-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+                <div>
+                    <div class="flex items-center gap-3 text-xs font-mono text-zinc-400 mb-2">
+                        <span class="w-2 h-2 bg-brand-red inline-block"></span>
+                        <span class="uppercase tracking-wider">Portfólio & Trabalhos</span>
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-bold font-display text-white">Meus Projetos</h2>
+                </div>
+            </div>
+
+            <!-- Grid de Projetos -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Projeto 1: O Jogo 2D -->
+                <div class="project-card group bg-zinc-950 rounded-xl border border-zinc-800 overflow-hidden hover:border-brand-red transition-all duration-300">
+                    <div class="relative h-48 bg-zinc-900 overflow-hidden flex items-center justify-center p-6">
+                        <div class="w-full h-full rounded-lg bg-gradient-to-br from-red-950 to-zinc-900 border border-zinc-700/50 p-4 flex flex-col justify-between">
+                            <span class="font-mono text-[10px] text-brand-red">01 // GAME DEV</span>
+                            <div class="font-display font-bold text-xl text-white">CYBER RUNNER 2D</div>
+                        </div>
+                    </div>
+                    <div class="p-6 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="font-mono text-xs text-brand-red">Jogo Autoral</span>
+                            <span class="font-mono text-xs text-zinc-500">2026</span>
+                        </div>
+                        <h3 class="text-lg font-bold font-display text-white group-hover:text-brand-red transition-colors">Jogo 2D em HTML Canvas</h3>
+                        <p class="text-zinc-400 text-sm">Jogo interativo desenvolvido com HTML5 Canvas e lógica de colisões em JavaScript puro.</p>
+                        <div class="pt-2 flex items-center justify-between font-mono text-xs">
+                            <span class="text-zinc-500">Canvas · JavaScript · CSS</span>
+                            <a href="#game-section" class="text-white hover:text-brand-red font-semibold">Jogar →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Projeto 2: Sistema Técnico TI -->
+                <div class="project-card group bg-zinc-950 rounded-xl border border-zinc-800 overflow-hidden hover:border-brand-red transition-all duration-300">
+                    <div class="relative h-48 bg-zinc-900 overflow-hidden flex items-center justify-center p-6">
+                        <div class="w-full h-full rounded-lg bg-gradient-to-br from-zinc-800 to-zinc-950 border border-zinc-700/50 p-4 flex flex-col justify-between">
+                            <span class="font-mono text-[10px] text-emerald-400">02 // WEB APP</span>
+                            <div class="font-display font-bold text-xl text-white">TECH LAB TI</div>
+                        </div>
+                    </div>
+                    <div class="p-6 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="font-mono text-xs text-emerald-400">Curso Técnico</span>
+                            <span class="font-mono text-xs text-zinc-500">2025-2026</span>
+                        </div>
+                        <h3 class="text-lg font-bold font-display text-white group-hover:text-brand-red transition-colors">Sistema Web Escolar</h3>
+                        <p class="text-zinc-400 text-sm">Aplicação web desenvolvida para a prática do 2º ano do curso técnico em TI com layout responsivo.</p>
+                        <div class="pt-2 flex items-center justify-between font-mono text-xs">
+                            <span class="text-zinc-500">HTML · Tailwind · JS</span>
+                            <button onclick="openDetailModal('Sistema Web Escolar', 'Aplicação desenvolvida para o curso de TI com gerenciamento de dados e interface fluida.', ['HTML5', 'Tailwind CSS', 'JavaScript'])" class="text-white hover:text-brand-red font-semibold">Detalhes →</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Projeto 3: Portfólio Webdrift -->
+                <div class="project-card group bg-zinc-950 rounded-xl border border-zinc-800 overflow-hidden hover:border-brand-red transition-all duration-300">
+                    <div class="relative h-48 bg-zinc-900 overflow-hidden flex items-center justify-center p-6">
+                        <div class="w-full h-full rounded-lg bg-gradient-to-br from-zinc-900 to-black border border-zinc-700/50 p-4 flex flex-col justify-between">
+                            <span class="font-mono text-[10px] text-amber-400">03 // PORTFÓLIO</span>
+                            <div class="font-display font-bold text-xl text-white">WEB DRIFT PORTFOLIO</div>
+                        </div>
+                    </div>
+                    <div class="p-6 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="font-mono text-xs text-amber-400">Website Pessoal</span>
+                            <span class="font-mono text-xs text-zinc-500">2026</span>
+                        </div>
+                        <h3 class="text-lg font-bold font-display text-white group-hover:text-brand-red transition-colors">Portfólio Neobrutalista 3D</h3>
+                        <p class="text-zinc-400 text-sm">Site inspirado na estética da Webdrift.be com Three.js, efeitos CRT e design responsivo.</p>
+                        <div class="pt-2 flex items-center justify-between font-mono text-xs">
+                            <span class="text-zinc-500">Three.js · Tailwind · JS</span>
+                            <button onclick="openDetailModal('Portfólio Interactive Webdrift', 'Projeto de portfólio completo com suporte a visualizador 3D, relógio ao vivo e jogos embarcados.', ['Three.js', 'Tailwind CSS', 'Audio API'])" class="text-white hover:text-brand-red font-semibold">Detalhes →</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SEÇÃO 6: HABILIDADES / TERMINAL -->
+    <section id="skills" class="py-24 bg-[#0a0a0c] relative border-b border-zinc-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="flex items-center gap-3 text-xs font-mono text-zinc-400 mb-4">
+                <span class="w-2 h-2 bg-brand-red inline-block"></span>
+                <span class="uppercase tracking-wider">Habilidades do Técnico de TI</span>
+            </div>
+
+            <h2 class="text-3xl sm:text-4xl font-bold font-display text-white mb-12">Conhecimentos & Tecnologias</h2>
+
+            <div class="bg-zinc-950 rounded-2xl border border-zinc-800 overflow-hidden shadow-2xl">
+                <div class="bg-zinc-900/90 px-4 py-3 border-b border-zinc-800 flex items-center justify-between font-mono text-xs text-zinc-400">
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-red-500 inline-block"></span>
+                        <span class="w-3 h-3 rounded-full bg-yellow-500 inline-block"></span>
+                        <span class="w-3 h-3 rounded-full bg-green-500 inline-block"></span>
+                        <span class="ml-2 text-zinc-300">celio-terminal --skills-check</span>
+                    </div>
+                    <span>TI 2º ANO</span>
+                </div>
+
+                <div class="p-6 sm:p-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 font-mono">
+                    <div class="space-y-3">
+                        <div class="text-brand-red font-bold text-sm">/01 FRONTEND</div>
+                        <ul class="text-xs space-y-2 text-zinc-300">
+                            <li class="flex items-center justify-between"><span>HTML5 / Semântica</span> <span class="text-emerald-400 font-bold">Domínio</span></li>
+                            <li class="flex items-center justify-between"><span>CSS3 / Tailwind</span> <span class="text-emerald-400 font-bold">Avançado</span></li>
+                            <li class="flex items-center justify-between"><span>JavaScript ES6+</span> <span class="text-emerald-400 font-bold">Avançado</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div class="text-brand-red font-bold text-sm">/02 GAME DEV</div>
+                        <ul class="text-xs space-y-2 text-zinc-300">
+                            <li class="flex items-center justify-between"><span>HTML5 Canvas 2D</span> <span class="text-emerald-400 font-bold">Avançado</span></li>
+                            <li class="flex items-center justify-between"><span>Lógica de Jogos</span> <span class="text-emerald-400 font-bold">Físicas / Colisão</span></li>
+                            <li class="flex items-center justify-between"><span>Three.js (Básico 3D)</span> <span class="text-zinc-400">Em Estudo</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div class="text-brand-red font-bold text-sm">/03 CONCEITOS TI</div>
+                        <ul class="text-xs space-y-2 text-zinc-300">
+                            <li class="flex items-center justify-between"><span>Lógica & Algoritmos</span> <span class="text-emerald-400 font-bold">Domínio</span></li>
+                            <li class="flex items-center justify-between"><span>Estruturas de Dados</span> <span class="text-zinc-400">2º Ano TI</span></li>
+                            <li class="flex items-center justify-between"><span>Modelagem BD</span> <span class="text-zinc-400">2º Ano TI</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div class="text-brand-red font-bold text-sm">/04 FERRAMENTAS</div>
+                        <ul class="text-xs space-y-2 text-zinc-300">
+                            <li class="flex items-center justify-between"><span>Git & GitHub</span> <span class="text-emerald-400 font-bold">Ativo</span></li>
+                            <li class="flex items-center justify-between"><span>VS Code</span> <span class="text-emerald-400 font-bold">Diário</span></li>
+                            <li class="flex items-center justify-between"><span>Figma (Básico)</span> <span class="text-zinc-400">Em Estudo</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- RODAPÉ & CONTATO -->
+    <footer class="py-20 bg-brand-light text-zinc-900 border-t border-zinc-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div>
+                <h2 class="text-3xl sm:text-4xl font-bold font-display text-zinc-900 tracking-tight">
+                    Vamos conversar sobre um projeto ou oportunidade?
+                </h2>
+                <p class="text-zinc-600 mt-2 font-normal">
+                    Entre em contato via e-mail: <strong class="text-zinc-900 font-semibold">celioaugustodasilvapereira037@gmail.com</strong>
+                </p>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <button onclick="openProjectModal()" class="px-8 py-4 rounded-md bg-brand-red hover:bg-brand-red-bright text-white font-semibold text-base shadow-xl transition-all transform hover:-translate-y-0.5">
+                    Enviar Mensagem →
+                </button>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 pt-8 border-t border-zinc-300/80 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-zinc-500">
+            <div>
+                © 2026 Célio Augusto da Silva Pereira. Estudante do 2º Ano Técnico de TI.
+            </div>
+            <div class="flex items-center gap-6">
+                <a href="mailto:celioaugustodasilvapereira037@gmail.com" class="hover:text-brand-red font-bold">E-mail Direct</a>
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- MODAL DE CONTATO -->
+    <div id="project-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <div class="bg-[#0a0a0c] border border-zinc-800 w-full max-w-xl rounded-2xl p-6 sm:p-8 text-white relative shadow-2xl">
+            <button onclick="closeProjectModal()" class="absolute top-4 right-4 text-zinc-400 hover:text-white p-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+
+            <div class="mb-6">
+                <span class="text-xs font-mono text-brand-red uppercase tracking-wider">Enviar Mensagem</span>
+                <h3 class="text-2xl font-bold font-display mt-1">Contato com Célio Augusto</h3>
+                <p class="text-xs text-zinc-400 mt-1">Envie uma mensagem direta para o e-mail celioaugustodasilvapereira037@gmail.com</p>
+            </div>
+
+            <form id="project-form" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-mono text-zinc-400 mb-1">Seu Nome</label>
+                    <input type="text" required placeholder="Digite seu nome..." class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-red">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-mono text-zinc-400 mb-1">Seu E-mail</label>
+                    <input type="email" required placeholder="seu@email.com" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-red">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-mono text-zinc-400 mb-1">Mensagem</label>
+                    <textarea rows="3" required placeholder="Escreva sua mensagem aqui..." class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-red"></textarea>
+                </div>
+
+                <button type="submit" class="w-full py-3 bg-brand-red hover:bg-brand-red-bright text-white font-semibold rounded-lg text-sm transition-colors shadow-lg shadow-brand-red/20">
+                    Enviar para Célio
+                </button>
+            </form>
+
+            <div id="modal-success" class="hidden text-center py-8 space-y-3">
+                <div class="w-12 h-12 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto text-xl font-bold">
+                    ✓
+                </div>
+                <h4 class="text-xl font-bold font-display">Mensagem Enviada com Sucesso!</h4>
+                <p class="text-sm text-zinc-400">Obrigado pelo contato! Responderá em breve pelo e-mail celioaugustodasilvapereira037@gmail.com.</p>
+                <button onclick="closeProjectModal()" class="mt-4 px-6 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded text-xs font-mono">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE DETALHES -->
+    <div id="detail-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <div class="bg-[#0a0a0c] border border-zinc-800 w-full max-w-2xl rounded-2xl p-6 sm:p-8 text-white relative shadow-2xl space-y-6">
+            <button onclick="closeDetailModal()" class="absolute top-4 right-4 text-zinc-400 hover:text-white p-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <div class="space-y-2">
+                <span class="text-xs font-mono text-brand-red uppercase tracking-wider">Detalhes do Projeto</span>
+                <h3 id="detail-title" class="text-3xl font-bold font-display">Nome do Projeto</h3>
+            </div>
+
+            <p id="detail-desc" class="text-zinc-300 text-sm leading-relaxed">
+                Descrição do projeto.
+            </p>
+
+            <div>
+                <span class="text-xs font-mono text-zinc-500 block mb-2">TECNOLOGIAS USADAS</span>
+                <div id="detail-tags" class="flex flex-wrap gap-2 font-mono text-xs"></div>
+            </div>
+
+            <div class="pt-4 border-t border-zinc-800 flex justify-end">
+                <button onclick="closeDetailModal()" class="px-5 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded text-xs font-mono">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- SCRIPTS JAVASCRIPT -->
+    <script>
+        // 1. RELÓGIO COM FUSO HORÁRIO DE SÃO PAULO
+        function updateClock() {
+            try {
+                const now = new Date();
+                const options = { timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+                const timeString = new Intl.DateTimeFormat('pt-BR', options).format(now);
+                document.getElementById('live-clock').textContent = timeString;
+            } catch (e) {
+                const now = new Date();
+                document.getElementById('live-clock').textContent = now.toLocaleTimeString('pt-BR');
+            }
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // 2. COORDENADAS DO MOUSE NA TELA
+        window.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth).toFixed(2);
+            const y = (e.clientY / window.innerHeight).toFixed(2);
+            const display = document.getElementById('coords-display');
+            if (display) {
+                display.textContent = `x ${x} · y ${y}`;
+            }
+        });
+
+        // 3. MODO RETRO 1984 VINTAGE & SOM BEEP
+        let mode1984Active = false;
+        const btn1984 = document.getElementById('btn-1984');
+        const badge1984 = document.getElementById('badge-1984');
+
+        btn1984.addEventListener('click', () => {
+            mode1984Active = !mode1984Active;
+            playBeep(mode1984Active ? 880 : 440);
+
+            if (mode1984Active) {
+                document.body.classList.add('mode-1984-active');
+                document.documentElement.classList.add('mode-1984');
+                badge1984.textContent = 'ON';
+                badge1984.classList.replace('bg-zinc-800', 'bg-brand-red');
+                badge1984.classList.replace('text-zinc-400', 'text-white');
+            } else {
+                document.body.classList.remove('mode-1984-active');
+                document.documentElement.classList.remove('mode-1984');
+                badge1984.textContent = 'OFF';
+                badge1984.classList.replace('bg-brand-red', 'bg-zinc-800');
+                badge1984.classList.replace('text-white', 'text-zinc-400');
+            }
+        });
+
+        function playBeep(freq = 440) {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.15);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.15);
+            } catch (e) {}
+        }
+
+        // 4. MENU MOBILE
+        const mobileBtn = document.getElementById('btn-mobile-menu');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // 5. MODAIS
+        function openProjectModal() {
+            document.getElementById('project-modal').classList.remove('hidden');
+            document.getElementById('project-form').classList.remove('hidden');
+            document.getElementById('modal-success').classList.add('hidden');
+        }
+        function closeProjectModal() {
+            document.getElementById('project-modal').classList.add('hidden');
+        }
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            playBeep(600);
+            document.getElementById('project-form').classList.add('hidden');
+            document.getElementById('modal-success').classList.remove('hidden');
+        }
+
+        function openDetailModal(title, desc, tags) {
+            document.getElementById('detail-title').textContent = title;
+            document.getElementById('detail-desc').textContent = desc;
+            const container = document.getElementById('detail-tags');
+            container.innerHTML = tags.map(t => `<span class="px-2.5 py-1 bg-zinc-900 border border-zinc-800 rounded text-brand-red">${t}</span>`).join('');
+            document.getElementById('detail-modal').classList.remove('hidden');
+        }
+        function closeDetailModal() {
+            document.getElementById('detail-modal').classList.add('hidden');
+        }
+
+        // 6. MINI-JOGO 2D CANVÂS (CYBER RUNNER POR CÉLIO)
+        (function initCyberGame() {
+            const canvas = document.getElementById('cyber-game-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const scoreEl = document.getElementById('game-score');
+            const highscoreEl = document.getElementById('game-highscore');
+            const overlay = document.getElementById('game-overlay');
+            const btnStart = document.getElementById('btn-start-game');
+
+            let isRunning = false;
+            let score = 0;
+            let highscore = 0;
+            let animationFrameId;
+
+            function resizeCanvas() {
+                canvas.width = canvas.parentElement.clientWidth;
+                canvas.height = canvas.parentElement.clientHeight;
+            }
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            // Jogador (Quadrado com rastro neon)
+            const player = {
+                x: 60,
+                y: 0,
+                width: 28,
+                height: 28,
+                dy: 0,
+                gravity: 0.65,
+                jumpPower: -12,
+                isGrounded: false
+            };
+
+            // Obstáculos
+            let obstacles = [];
+            let spawnTimer = 0;
+
+            function resetGame() {
+                score = 0;
+                scoreEl.textContent = '0';
+                player.y = canvas.height - player.height - 40;
+                player.dy = 0;
+                player.isGrounded = true;
+                obstacles = [];
+                spawnTimer = 0;
+            }
+
+            function jump() {
+                if (player.isGrounded && isRunning) {
+                    player.dy = player.jumpPower;
+                    player.isGrounded = false;
+                    playBeep(520);
+                }
+            }
+
+            window.addEventListener('keydown', (e) => {
+                if (e.code === 'Space') {
+                    e.preventDefault();
+                    if (!isRunning && overlay.style.display !== 'none') {
+                        startGame();
+                    } else {
+                        jump();
+                    }
+                }
+            });
+
+            canvas.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                if (!isRunning) startGame();
+                else jump();
+            });
+
+            canvas.addEventListener('mousedown', () => {
+                if (isRunning) jump();
+            });
+
+            btnStart.addEventListener('click', startGame);
+
+            function startGame() {
+                resetGame();
+                isRunning = true;
+                overlay.style.display = 'none';
+                cancelAnimationFrame(animationFrameId);
+                gameLoop();
+            }
+
+            function gameOver() {
+                isRunning = false;
+                playBeep(200);
+                if (score > highscore) {
+                    highscore = score;
+                    highscoreEl.textContent = highscore;
+                }
+                overlay.style.display = 'flex';
+                overlay.querySelector('h3').textContent = "Game Over!";
+                btnStart.textContent = "▶ JOGAR NOVAMENTE";
+            }
+
+            function gameLoop() {
+                if (!isRunning) return;
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // Desenhar Chão Neon
+                const groundY = canvas.height - 40;
+                ctx.fillStyle = '#1c1c24';
+                ctx.fillRect(0, groundY, canvas.width, 40);
+                ctx.fillStyle = '#e62b40';
+                ctx.fillRect(0, groundY, canvas.width, 3);
+
+                // Física do Jogador
+                player.dy += player.gravity;
+                player.y += player.dy;
+
+                if (player.y + player.height >= groundY) {
+                    player.y = groundY - player.height;
+                    player.dy = 0;
+                    player.isGrounded = true;
+                }
+
+                // Desenhar Jogador (Vermelho Neon Webdrift)
+                ctx.fillStyle = '#e62b40';
+                ctx.fillRect(player.x, player.y, player.width, player.height);
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(player.x + player.width - 8, player.y + 6, 4, 4);
+
+                // Gerar Obstáculos
+                spawnTimer++;
+                if (spawnTimer > 90 + Math.random() * 40) {
+                    spawnTimer = 0;
+                    obstacles.push({
+                        x: canvas.width,
+                        width: 20 + Math.random() * 15,
+                        height: 30 + Math.random() * 25
+                    });
+                }
+
+                // Atualizar e Desenhar Obstáculos
+                for (let i = obstacles.length - 1; i >= 0; i--) {
+                    const obs = obstacles[i];
+                    obs.x -= 5.5;
+
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(obs.x, groundY - obs.height, obs.width, obs.height);
+
+                    // Colisão
+                    if (
+                        player.x < obs.x + obs.width &&
+                        player.x + player.width > obs.x &&
+                        player.y < groundY &&
+                        player.y + player.height > groundY - obs.height
+                    ) {
+                        gameOver();
+                        return;
+                    }
+
+                    // Remover quando sair da tela
+                    if (obs.x + obs.width < 0) {
+                        obstacles.splice(i, 1);
+                        score += 10;
+                        scoreEl.textContent = score;
+                    }
+                }
+
+                animationFrameId = requestAnimationFrame(gameLoop);
+            }
+        })();
+
+        // 7. THREE.JS 3D CANVAS HERO (Webdrift MacroPad 3D)
+        window.addEventListener('load', () => {
+            const container = document.getElementById('hero-3d-container');
+            const loading = document.getElementById('canvas-loading');
+            if (!container) return;
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.set(0, 4.5, 6.5);
+            camera.lookAt(0, 0, 0);
+
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            container.appendChild(renderer.domElement);
+            if (loading) loading.style.display = 'none';
+
+            // Iluminação
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+            scene.add(ambientLight);
+
+            const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
+            dirLight.position.set(5, 10, 7);
+            scene.add(dirLight);
+
+            const redPointLight = new THREE.PointLight(0xe62b40, 2, 8);
+            redPointLight.position.set(-2, 2, 2);
+            scene.add(redPointLight);
+
+            // Dispositivo 3D
+            const keypadGroup = new THREE.Group();
+
+            const baseGeo = new THREE.BoxGeometry(4.2, 0.5, 2.4);
+            const baseMat = new THREE.MeshPhongMaterial({ color: 0xf4f3ef, specular: 0x333333, shininess: 40 });
+            const baseMesh = new THREE.Mesh(baseGeo, baseMat);
+            keypadGroup.add(baseMesh);
+
+            for (let r = 0; r < 2; r++) {
+                for (let c = 0; c < 4; c++) {
+                    const isRed = (r === 1 && c === 3);
+                    const keyGeo = new THREE.BoxGeometry(0.7, 0.35, 0.7);
+                    const keyMat = new THREE.MeshPhongMaterial({ 
+                        color: isRed ? 0xe62b40 : 0x18181c, 
+                        specular: 0x555555 
+                    });
+                    const keyMesh = new THREE.Mesh(keyGeo, keyMat);
+                    keyMesh.position.set(-1.35 + c * 0.9, 0.35, -0.35 + r * 0.85);
+                    keypadGroup.add(keyMesh);
+                }
+            }
+
+            const screenGeo = new THREE.BoxGeometry(1.6, 0.1, 0.65);
+            const screenMat = new THREE.MeshBasicMaterial({ color: 0x0a0a0c });
+            const screenMesh = new THREE.Mesh(screenGeo, screenMat);
+            screenMesh.position.set(-0.9, 0.3, -0.55);
+            keypadGroup.add(screenMesh);
+
+            const knobGeo = new THREE.CylinderGeometry(0.28, 0.28, 0.35, 32);
+            const knobMat = new THREE.MeshPhongMaterial({ color: 0x111115, specular: 0x888888 });
+            const knobMesh = new THREE.Mesh(knobGeo, knobMat);
+            knobMesh.position.set(1.35, 0.35, -0.55);
+            keypadGroup.add(knobMesh);
+
+            scene.add(keypadGroup);
+
+            let mouseX = 0, mouseY = 0;
+            let targetRotationX = 0, targetRotationY = 0;
+
+            container.addEventListener('mousemove', (e) => {
+                const rect = container.getBoundingClientRect();
+                mouseX = ((e.clientX - rect.left) / container.clientWidth) * 2 - 1;
+                mouseY = -((e.clientY - rect.top) / container.clientHeight) * 2 + 1;
+                targetRotationY = mouseX * 0.6;
+                targetRotationX = mouseY * 0.4;
+            });
+
+            let clock = new THREE.Clock();
+            function animate() {
+                requestAnimationFrame(animate);
+                const elapsedTime = clock.getElapsedTime();
+                keypadGroup.position.y = Math.sin(elapsedTime * 1.8) * 0.12;
+                keypadGroup.rotation.y += (targetRotationY - keypadGroup.rotation.y) * 0.05;
+                keypadGroup.rotation.x += (targetRotationX - keypadGroup.rotation.x) * 0.05;
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            window.addEventListener('resize', () => {
+                if (!container) return;
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            });
+        });
+    </script>
+</body>
+</html>
